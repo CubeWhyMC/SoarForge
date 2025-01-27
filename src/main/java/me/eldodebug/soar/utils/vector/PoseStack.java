@@ -1,13 +1,12 @@
 package me.eldodebug.soar.utils.vector;
 
-import java.util.Deque;
-
 import com.google.common.collect.Queues;
-
 import me.eldodebug.soar.utils.MathUtils;
 
+import java.util.Deque;
+
 public class PoseStack {
-	
+
     private final Deque<Pose> poseStack;
 
     public PoseStack() {
@@ -36,7 +35,7 @@ public class PoseStack {
         float j = 1.0F / g;
         float k = 1.0F / h;
         float l = MathUtils.fastInvCubeRoot(i * j * k);
-        
+
         pose.normal.mul(Matrix3f.createScaleMatrix(l * i, l * j, l * k));
     }
 

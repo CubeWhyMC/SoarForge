@@ -4,7 +4,7 @@ import me.eldodebug.soar.Soar;
 
 public class SecurityFeature {
 
-	public SecurityFeature() {
-		Soar.getInstance().getEventManager().register(this);
-	}
+    public SecurityFeature() {
+        Soar.getInstance().getEventManager().register(this);
+    }
 }

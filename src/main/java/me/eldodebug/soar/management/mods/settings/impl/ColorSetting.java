@@ -1,92 +1,92 @@
 package me.eldodebug.soar.management.mods.settings.impl;
 
-import java.awt.Color;
-
 import me.eldodebug.soar.Soar;
 import me.eldodebug.soar.management.language.TranslateText;
 import me.eldodebug.soar.management.mods.Mod;
 import me.eldodebug.soar.management.mods.settings.Setting;
 import me.eldodebug.soar.utils.ColorUtils;
 
+import java.awt.*;
+
 public class ColorSetting extends Setting {
 
-	private float hue, saturation, brightness;
-	private int alpha;
-	private Color defaultColor, color;
-	private boolean showAlpha;
-	
-	public ColorSetting(TranslateText text, Mod parent, Color color, boolean showAlpha) {
-		super(text, parent);
-		
-		this.color = color;
-		this.defaultColor = color;
-		this.hue = ColorUtils.getHue(color);
-		this.saturation = ColorUtils.getSaturation(color);
-		this.brightness = ColorUtils.getBrightness(color);
-		this.alpha = color.getAlpha();
-		this.showAlpha = showAlpha;
-		
-		Soar.getInstance().getModManager().addSettings(this);
-	}
-	
-	@Override
-	public void reset() {
-		this.color = defaultColor;
-		this.hue = ColorUtils.getHue(color);
-		this.saturation = ColorUtils.getSaturation(color);
-		this.brightness = ColorUtils.getBrightness(color);
-		this.alpha = color.getAlpha();
-	}
+    private float hue, saturation, brightness;
+    private int alpha;
+    private Color defaultColor, color;
+    private boolean showAlpha;
 
-	public Color getColor() {
-		return color;
-	}
+    public ColorSetting(TranslateText text, Mod parent, Color color, boolean showAlpha) {
+        super(text, parent);
 
-	public void setColor(Color color) {
-		this.color = color;
-	}
+        this.color = color;
+        this.defaultColor = color;
+        this.hue = ColorUtils.getHue(color);
+        this.saturation = ColorUtils.getSaturation(color);
+        this.brightness = ColorUtils.getBrightness(color);
+        this.alpha = color.getAlpha();
+        this.showAlpha = showAlpha;
 
-	public Color getDefaultColor() {
-		return defaultColor;
-	}
+        Soar.getInstance().getModManager().addSettings(this);
+    }
 
-	public float getHue() {
-		return hue;
-	}
+    @Override
+    public void reset() {
+        this.color = defaultColor;
+        this.hue = ColorUtils.getHue(color);
+        this.saturation = ColorUtils.getSaturation(color);
+        this.brightness = ColorUtils.getBrightness(color);
+        this.alpha = color.getAlpha();
+    }
 
-	public void setHue(float hue) {
-		this.hue = hue;
-		this.color = ColorUtils.applyAlpha(Color.getHSBColor(hue, saturation, brightness), alpha);
-	}
+    public Color getColor() {
+        return color;
+    }
 
-	public float getSaturation() {
-		return saturation;
-	}
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
-	public void setSaturation(float saturation) {
-		this.saturation = saturation;
-		this.color = ColorUtils.applyAlpha(Color.getHSBColor(hue, saturation, brightness), alpha);
-	}
+    public Color getDefaultColor() {
+        return defaultColor;
+    }
 
-	public float getBrightness() {
-		return brightness;
-	}
+    public float getHue() {
+        return hue;
+    }
 
-	public void setBrightness(float brightness) {
-		this.brightness = brightness;
-		this.color = ColorUtils.applyAlpha(Color.getHSBColor(hue, saturation, brightness), alpha);
-	}
+    public void setHue(float hue) {
+        this.hue = hue;
+        this.color = ColorUtils.applyAlpha(Color.getHSBColor(hue, saturation, brightness), alpha);
+    }
 
-	public int getAlpha() {
-		return alpha;
-	}
+    public float getSaturation() {
+        return saturation;
+    }
 
-	public void setAlpha(int alpha) {
-		this.alpha = alpha;
-		this.color = ColorUtils.applyAlpha(color, alpha);
-	}
+    public void setSaturation(float saturation) {
+        this.saturation = saturation;
+        this.color = ColorUtils.applyAlpha(Color.getHSBColor(hue, saturation, brightness), alpha);
+    }
 
-	public boolean isShowAlpha() {
-		return showAlpha;
-	}
+    public float getBrightness() {
+        return brightness;
+    }
+
+    public void setBrightness(float brightness) {
+        this.brightness = brightness;
+        this.color = ColorUtils.applyAlpha(Color.getHSBColor(hue, saturation, brightness), alpha);
+    }
+
+    public int getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(int alpha) {
+        this.alpha = alpha;
+        this.color = ColorUtils.applyAlpha(color, alpha);
+    }
+
+    public boolean isShowAlpha() {
+        return showAlpha;
+    }
 }

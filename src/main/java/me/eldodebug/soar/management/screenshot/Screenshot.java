@@ -1,30 +1,30 @@
 package me.eldodebug.soar.management.screenshot;
 
-import java.io.File;
-
 import me.eldodebug.soar.utils.animation.simple.SimpleAnimation;
+
+import java.io.File;
 
 public class Screenshot {
 
-	private SimpleAnimation selectAnimation = new SimpleAnimation();
-	
-	private String name;
-	private File image;
-	
-	public Screenshot(File image) {
-		this.image = image;
-		this.name = image.getName().replace(".png", "");
-	}
+    private SimpleAnimation selectAnimation = new SimpleAnimation();
 
-	public SimpleAnimation getSelectAnimation() {
-		return selectAnimation;
-	}
+    private String name;
+    private File image;
 
-	public String getName() {
-		return name;
-	}
+    public Screenshot(File image) {
+        this.image = image;
+        this.name = image.getName().replace(".png", "");
+    }
 
-	public File getImage() {
-		return image;
-	}
+    public SimpleAnimation getSelectAnimation() {
+        return selectAnimation;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public File getImage() {
+        return image;
+    }
 }

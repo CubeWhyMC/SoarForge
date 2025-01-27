@@ -1,13 +1,12 @@
 package me.eldodebug.soar.mcef;
 
-import java.awt.Component;
-import java.awt.Point;
+import java.awt.*;
 
 public class DummyComponent extends Component {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Override
+    @Override
     public Point getLocationOnScreen() {
         return new Point(0, 0);
     }

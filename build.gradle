@@ -1,109 +1,131 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = 'sponge'
-            url = 'https://repo.spongepowered.org/maven'
-        }
-        maven {
-            url = 'https://jitpack.io'
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
-        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
-    }
+plugins {
+    id 'java'
+    id "idea"
+    id "org.jetbrains.kotlin.jvm"
+    id "com.github.johnrengelman.shadow" version "6.1.0"
+    id "com.gorylenko.gradle-git-properties" version "2.4.1"
+    id "net.minecraftforge.gradle.forge"
+    id "org.spongepowered.mixin"
 }
 
-apply plugin: 'net.minecraftforge.gradle.tweaker-client'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'java'
+group = 'org.cubewhy.soar'
+version = '1.0-SNAPSHOT'
 
-version = "Release"
-group= "me.eldodebug"
-archivesBaseName = "SoarClient"
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
-sourceCompatibility = targetCompatibility = 1.8
-compileJava.options.encoding = 'UTF-8'
+compileJava.options.encoding = "UTF-8"
 
-minecraft {
-    version = "1.8.9"
-    tweakClass = "me.eldodebug.soar.injection.mixin.SoarTweaker"
-    runDir = "run"
-    mappings = "stable_22"
-    clientJvmArgs = ["-XX:-DisableExplicitGC"]
-    makeObfSourceJar = false
+configurations {
+    include
+    implementation.extendsFrom(include)
+
+    external
+    compile.extendsFrom(external)
+
+    runtimeOnly.canBeResolved = true
 }
 
 repositories {
-    maven {
-        name "jitpack"
-        url "https://jitpack.io"
-    }
-
-    maven {
-        name "spongepowered"
-        url "https://repo.spongepowered.org/maven/"
-    }
-    jcenter()
+    maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
+    maven { url = "https://jitpack.io/" }
     mavenCentral()
 }
 
-configurations {
-    embed
-    compile.extendsFrom(embed)
+dependencies {
+    include fileTree(dir: "libs", includes: ['*.jar'])
+
+    // Don't update mixin
+    include("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        transitive = false
+        exclude module: "guava"
+        exclude module: "commons-io"
+        exclude module: "gson"
+        exclude module: "launchwrapper"
+        exclude module: "log4j-core"
+        exclude module: "slf4j-api"
+    }
+
+    annotationProcessor "org.spongepowered:mixin:0.7.11-SNAPSHOT"
+
+    include "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    include 'com.squareup.okhttp3:okhttp:5.0.0-alpha.14'
+
+    implementation 'org.jetbrains:annotations:24.0.1'
+
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
 
-dependencies {
-    embed('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
-        exclude module: 'launchwrapper'
-        exclude module: 'guava'
-        exclude module: 'gson'
-        exclude module: 'commons-io'
-    }
+shadowJar {
+    archiveClassifier.set("fatjar")
+    configurations = [project.configurations.include]
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+
+    exclude "native-binaries/**"
+
+    exclude "LICENSE.txt"
+
+    exclude "META-INF/maven/**"
+    exclude "META-INF/versions/**"
+
+    exclude "org/junit/**"
+}
+
+
+minecraft {
+    version = "1.8.9-11.15.1.2318-1.8.9"
+    runDir = "run"
+    mappings = "stable_22"
+    makeObfSourceJar = false
+    clientJvmArgs += ["-Dfml.coreMods.load=me.eldodebug.soar.injection.transformer.TransformerLoader", "-Xmx2048m -Xms2048m", "-Ddev-mode"]
+}
+
+jar {
+    manifestContentCharset 'utf-8'
+    metadataCharset 'utf-8'
+    manifest.attributes(
+            "FMLCorePlugin": "me.eldodebug.soar.injection.transformer.TransformerLoader",
+            "FMLCorePluginContainsFMLMod": true,
+            "ForceLoadAsMod": true,
+            "MixinConfigs": "mixins.soar.json",
+            "ModSide": "CLIENT",
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "TweakOrder": "0",
+//            "FMLAT": "soar_at.cfg"
+    )
 }
 
 mixin {
-    defaultObfuscationEnv = "notch"
+    defaultObfuscationEnv searge
     add sourceSets.main, "mixins.soar.refmap.json"
 }
 
+reobf {
+    shadowJar {
+        mappingType = "SEARGE"
+    }
+}
+
 processResources {
-    inputs.files "src/main/resources"
-    outputs.dir "build/classes/main"
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    filesMatching("mcmod.info") {
+        expand "version": project.version, "mcversion": project.minecraft.version
+    }
+
+    rename "(.+_at.cfg)", "META-INF/\$1"
+}
+
+tasks.register('moveResources') {
     copy {
-        from("src/main/resources")
-        into("build/classes/main")
+        from "${buildDir}/resources/main"
+        into "${buildDir}/classes/java"
     }
 }
 
-jar {
-    dependsOn configurations.compile
-    from {
-        configurations.embed.collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
-}
-
-jar {
-    manifest.attributes(
-            "MixinConfigs": 'mixins.soar.json',
-            "TweakClass": 'me.eldodebug.soar.injection.mixin.SoarTweaker',
-            "TweakOrder": 0,
-            "Manifest-Version": 1.0,
-            'FMLAT': 'soar_at.cfg'
-    )
-
-    configurations.embed.each { dep ->
-        from(project.zipTree(dep)) {
-            exclude 'META-INF', 'META-INF/**'
-        }
-    }
-}
+moveResources.dependsOn(processResources)
+classes.dependsOn(moveResources)

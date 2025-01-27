@@ -1,5 +1,15 @@
 package me.eldodebug.soar.management.account.microsoft;
 
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.web.WebView;
+import lombok.extern.slf4j.Slf4j;
+import me.eldodebug.soar.Soar;
+import me.eldodebug.soar.management.account.AccountManager;
+import sun.net.www.protocol.https.Handler;
+
+import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -8,23 +18,13 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.swing.JFrame;
-
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.web.WebView;
-import me.eldodebug.soar.Soar;
-import me.eldodebug.soar.logger.SoarLogger;
-import me.eldodebug.soar.management.account.AccountManager;
-import sun.net.www.protocol.https.Handler;
-
+@Slf4j
 public class MicrosoftLoginWindow extends JFrame {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private Runnable afterLogin;
-	
+    private final Runnable afterLogin;
+
     public MicrosoftLoginWindow(Runnable afterLogin) {
         this.setTitle("Connect with Microsoft");
         this.setSize(600, 700);
@@ -48,7 +48,7 @@ public class MicrosoftLoginWindow extends JFrame {
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-            	SoarLogger.error("User closed window");
+                log.error("User closed window");
                 setVisible(false);
             }
         });
@@ -64,15 +64,13 @@ public class MicrosoftLoginWindow extends JFrame {
             URL.setURLStreamHandlerFactory(protocol -> {
 
                 if (!protocol.equals("https")) return null;
-                return new Handler()
-                {
+                return new Handler() {
                     @Override
-                    protected URLConnection openConnection(URL url, Proxy proxy) throws IOException
-                    {
+                    protected URLConnection openConnection(URL url, Proxy proxy) throws IOException {
                         HttpURLConnection connection = (HttpURLConnection) super.openConnection(url, proxy);
 
                         if (url.toString().contains("denied")) {
-                        	SoarLogger.error("Denied Connection");
+                            log.error("Denied Connection");
                             setVisible(false);
                         } else if (url.toString().contains("https://login.live.com/oauth20_desktop.srf?code")) {
                             getMicrosoftToken(url);
@@ -83,16 +81,16 @@ public class MicrosoftLoginWindow extends JFrame {
                 };
             });
         } catch (Error ignored) {
-        	SoarLogger.error("Override already applied");
+            log.error("Override already applied");
         }
     }
 
     private void getMicrosoftToken(URL url) {
-    	
-    	AccountManager accountManager = Soar.getInstance().getAccountManager();
-    	
-    	accountManager.getAuthenticator().loginWithUrl(url.toString());
-    	accountManager.save();
-    	afterLogin.run();
+
+        AccountManager accountManager = Soar.getInstance().getAccountManager();
+
+        accountManager.getAuthenticator().loginWithUrl(url.toString());
+        accountManager.save();
+        afterLogin.run();
     }
 }

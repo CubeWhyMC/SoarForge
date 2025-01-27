@@ -1,7 +1,6 @@
 package me.eldodebug.soar.viaversion;
 
 import com.viaversion.viaversion.api.connection.UserConnection;
-
 import me.eldodebug.soar.viaversion.netty.VLBPipeline;
 
 public class MCPVLBPipeline extends VLBPipeline {

@@ -6,12 +6,19 @@ import net.minecraft.util.Session;
 import net.minecraft.util.Timer;
 
 public interface IMixinMinecraft {
-	boolean isRunning();
-	Timer getTimer();
-	void setSession(Session session);
-	void callClickMouse();
-	void callRightClickMouse();
-	DefaultResourcePack getMcDefaultResourcePack();
+    boolean isRunning();
+
+    Timer getTimer();
+
+    void setSession(Session session);
+
+    void callClickMouse();
+
+    void callRightClickMouse();
+
+    DefaultResourcePack getMcDefaultResourcePack();
+
     void resizeWindow(int width, int height);
+
     Entity getRenderViewEntity();
 }

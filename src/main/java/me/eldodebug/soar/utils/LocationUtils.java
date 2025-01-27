@@ -7,7 +7,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 
 public class LocationUtils {
-	
+
     private double x;
     private double y;
     private double z;
@@ -157,7 +157,7 @@ public class LocationUtils {
         return Math.sqrt(dy * dy);
     }
 
-    public Vec3 toVector(){
+    public Vec3 toVector() {
         return new Vec3(this.x, this.y, this.z);
     }
 }

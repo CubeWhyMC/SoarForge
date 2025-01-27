@@ -3,8 +3,8 @@ package me.eldodebug.soar.utils.vector;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Vertex {
-	
-	private final Vector3f pos;
+
+    private final Vector3f pos;
     private final float u;
     private final float v;
 
@@ -22,15 +22,15 @@ public class Vertex {
         this.v = g;
     }
 
-	public Vector3f getPos() {
-		return pos;
-	}
+    public Vector3f getPos() {
+        return pos;
+    }
 
-	public float getU() {
-		return u;
-	}
+    public float getU() {
+        return u;
+    }
 
-	public float getV() {
-		return v;
-	}
+    public float getV() {
+        return v;
+    }
 }

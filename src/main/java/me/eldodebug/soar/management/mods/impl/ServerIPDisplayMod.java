@@ -10,24 +10,24 @@ import me.eldodebug.soar.utils.ServerUtils;
 
 public class ServerIPDisplayMod extends SimpleHUDMod {
 
-	private BooleanSetting iconSetting = new BooleanSetting(TranslateText.ICON, this, true);
-	
-	public ServerIPDisplayMod() {
-		super(TranslateText.SERVER_IP, TranslateText.SERVER_IP_DISPLAY_DESCRIPTION);
-	}
+    private BooleanSetting iconSetting = new BooleanSetting(TranslateText.ICON, this, true);
 
-	@EventTarget
-	public void onRender2D(EventRender2D event) {
-		this.draw();
-	}
-	
-	@Override
-	public String getText() {
-		return ServerUtils.getServerIP();
-	}
-	
-	@Override
-	public String getIcon() {
-		return iconSetting.isToggled() ? Icon.SERVER : null;
-	}
+    public ServerIPDisplayMod() {
+        super(TranslateText.SERVER_IP, TranslateText.SERVER_IP_DISPLAY_DESCRIPTION);
+    }
+
+    @EventTarget
+    public void onRender2D(EventRender2D event) {
+        this.draw();
+    }
+
+    @Override
+    public String getText() {
+        return ServerUtils.getServerIP();
+    }
+
+    @Override
+    public String getIcon() {
+        return iconSetting.isToggled() ? Icon.SERVER : null;
+    }
 }

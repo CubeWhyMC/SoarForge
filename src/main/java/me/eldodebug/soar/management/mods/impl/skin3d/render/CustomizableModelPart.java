@@ -1,10 +1,10 @@
 package me.eldodebug.soar.management.mods.impl.skin3d.render;
 
-import java.util.List;
-
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+
+import java.util.List;
 
 public class CustomizableModelPart {
 

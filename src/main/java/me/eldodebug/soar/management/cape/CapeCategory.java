@@ -4,25 +4,25 @@ import me.eldodebug.soar.utils.animation.ColorAnimation;
 import me.eldodebug.soar.utils.animation.simple.SimpleAnimation;
 
 public enum CapeCategory {
-	ALL("All"), MINECON("Minecon"), FLAG("Flag"), CUSTOM("Custom");
-	
-	private String name;
-	private SimpleAnimation backgroundAnimation = new SimpleAnimation();
-	private ColorAnimation textColorAnimation = new ColorAnimation();
-	
-	private CapeCategory(String name) {
-		this.name = name;
-	}
+    ALL("All"), MINECON("Minecon"), FLAG("Flag"), CUSTOM("Custom");
 
-	public String getName() {
-		return name;
-	}
+    private String name;
+    private SimpleAnimation backgroundAnimation = new SimpleAnimation();
+    private ColorAnimation textColorAnimation = new ColorAnimation();
 
-	public SimpleAnimation getBackgroundAnimation() {
-		return backgroundAnimation;
-	}
+    private CapeCategory(String name) {
+        this.name = name;
+    }
 
-	public ColorAnimation getTextColorAnimation() {
-		return textColorAnimation;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public SimpleAnimation getBackgroundAnimation() {
+        return backgroundAnimation;
+    }
+
+    public ColorAnimation getTextColorAnimation() {
+        return textColorAnimation;
+    }
 }

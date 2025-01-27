@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.Field;
 
 public class UnsafeUtils {
-	
+
     private static final Unsafe theUnsafe;
 
     private static final Field keyCode;
@@ -29,13 +29,13 @@ public class UnsafeUtils {
     private static final long offsetId;
     private static final long offsetWhen;
     private static final long offsetModifs;
-    
+
     static {
         try {
             Field f = Unsafe.class.getDeclaredField("theUnsafe");
             f.setAccessible(true);
             theUnsafe = (Unsafe) f.get(null);
-            
+
             keyCode = KeyEvent.class.getDeclaredField("keyCode");
             keyChar = KeyEvent.class.getDeclaredField("keyChar");
             keyLocation = KeyEvent.class.getDeclaredField("keyLocation");
@@ -43,7 +43,7 @@ public class UnsafeUtils {
             id = AWTEvent.class.getDeclaredField("id");
             when = InputEvent.class.getDeclaredField("when");
             modifs = InputEvent.class.getDeclaredField("modifiers");
-            
+
             offsetCode = theUnsafe.objectFieldOffset(keyCode);
             offsetChar = theUnsafe.objectFieldOffset(keyChar);
             offsetLocation = theUnsafe.objectFieldOffset(keyLocation);
@@ -63,11 +63,13 @@ public class UnsafeUtils {
             throw new RuntimeException("Unable to get theUnsafe.");
         }
     }
+
     public static KeyEvent makeEvent(Component src, int keyCode, char keyChar, int location, int type, long time, int modifs, long scanCode) {
         return makeEvent(src, keyCode, keyChar, location, type, time, modifs, scanCode, keyCode);
     }
+
     public static KeyEvent makeEvent(Component src, int keyCode, char keyChar, int location, int type, long time, int modifs, long scanCode, long raw) {
-    	
+
         KeyEvent event = new KeyEvent(src, KeyEvent.KEY_PRESSED, 0, 0, KeyEvent.VK_E, 'e', KeyEvent.KEY_LOCATION_STANDARD);
         theUnsafe.putInt(event, offsetCode, keyCode);
         theUnsafe.putInt(event, offsetChar, keyChar);
@@ -76,25 +78,25 @@ public class UnsafeUtils {
         theUnsafe.putInt(event, offsetModifs, modifs);
         theUnsafe.putLong(event, offsetWhen, time);
         theUnsafe.putLong(event, offsetRawCode, raw);
-        
+
         if (offsetScanCode != 0) {
             theUnsafe.putLong(event, offsetScanCode, scanCode);
         }
         return event;
     }
-    
+
     public static long getHandle(Field f) {
         return theUnsafe.staticFieldOffset(f);
     }
-    
+
     public static Object getBase(Field f) {
         return theUnsafe.staticFieldBase(f);
     }
-    
+
     public static void setBoolean(Object base, long handle, boolean v) {
         theUnsafe.putBoolean(base, handle, v);
     }
-    
+
     public static void setObject(Object base, long handle, String v) {
         theUnsafe.putObject(base, handle, v);
     }

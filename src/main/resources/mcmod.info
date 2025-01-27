@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "mcforge",
+    "name": "SoarClient",
+    "description": "Soar for Forge",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://example.com",
+    "updateUrl": "",
+    "authorList": ["EldoDebug", "cubewhy"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

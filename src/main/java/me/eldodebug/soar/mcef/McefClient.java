@@ -1,8 +1,5 @@
 package me.eldodebug.soar.mcef;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.cef.CefClient;
 import org.cef.CefSettings;
 import org.cef.browser.CefBrowser;
@@ -14,20 +11,23 @@ import org.cef.handler.CefDisplayHandler;
 import org.cef.handler.CefLoadHandler;
 import org.cef.network.CefRequest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class McefClient implements CefLoadHandler, CefContextMenuHandler, CefDisplayHandler {
-	
+
     private final CefClient handle;
     private final List<CefLoadHandler> loadHandlers = new ArrayList<>();
     private final List<CefContextMenuHandler> contextMenuHandlers = new ArrayList<>();
     private final List<CefDisplayHandler> displayHandlers = new ArrayList<>();
-    
+
     public McefClient(CefClient cefClient) {
-    	this.handle = cefClient;
-    	cefClient.addLoadHandler(this);
-    	cefClient.addContextMenuHandler(this);
-    	cefClient.addDisplayHandler(this);
+        this.handle = cefClient;
+        cefClient.addLoadHandler(this);
+        cefClient.addContextMenuHandler(this);
+        cefClient.addDisplayHandler(this);
     }
-    
+
     public CefClient getHandle() {
         return handle;
     }
@@ -46,14 +46,14 @@ public class McefClient implements CefLoadHandler, CefContextMenuHandler, CefDis
     @Override
     public void onLoadStart(CefBrowser browser, CefFrame frame, CefRequest.TransitionType transitionType) {
         for (CefLoadHandler loadHandler : loadHandlers) {
-        	loadHandler.onLoadStart(browser, frame, transitionType);
+            loadHandler.onLoadStart(browser, frame, transitionType);
         }
     }
 
     @Override
     public void onLoadEnd(CefBrowser browser, CefFrame frame, int httpStatusCode) {
         for (CefLoadHandler loadHandler : loadHandlers) {
-        	loadHandler.onLoadEnd(browser, frame, httpStatusCode);
+            loadHandler.onLoadEnd(browser, frame, httpStatusCode);
         }
     }
 
@@ -77,13 +77,13 @@ public class McefClient implements CefLoadHandler, CefContextMenuHandler, CefDis
 
     @Override
     public boolean onContextMenuCommand(CefBrowser browser, CefFrame frame, CefContextMenuParams params, int commandId, int eventFlags) {
-    	
+
         for (CefContextMenuHandler contextMenuHandler : contextMenuHandlers) {
             if (contextMenuHandler.onContextMenuCommand(browser, frame, params, commandId, eventFlags)) {
-            	return true;
+                return true;
             }
         }
-        
+
         return false;
     }
 
@@ -101,57 +101,57 @@ public class McefClient implements CefLoadHandler, CefContextMenuHandler, CefDis
     @Override
     public void onAddressChange(CefBrowser browser, CefFrame frame, String url) {
         for (CefDisplayHandler displayHandler : displayHandlers) {
-        	displayHandler.onAddressChange(browser, frame, url);
+            displayHandler.onAddressChange(browser, frame, url);
         }
     }
 
     @Override
     public void onTitleChange(CefBrowser browser, String title) {
         for (CefDisplayHandler displayHandler : displayHandlers) {
-        	displayHandler.onTitleChange(browser, title);
+            displayHandler.onTitleChange(browser, title);
         }
     }
 
     @Override
     public boolean onTooltip(CefBrowser browser, String text) {
-    	
+
         for (CefDisplayHandler displayHandler : displayHandlers) {
             if (displayHandler.onTooltip(browser, text)) {
-            	return true;
+                return true;
             }
         }
-        
+
         return false;
     }
 
     @Override
     public void onStatusMessage(CefBrowser browser, String value) {
         for (CefDisplayHandler displayHandler : displayHandlers) {
-        	displayHandler.onStatusMessage(browser, value);
+            displayHandler.onStatusMessage(browser, value);
         }
     }
 
     @Override
     public boolean onConsoleMessage(CefBrowser browser, CefSettings.LogSeverity level, String message, String source, int line) {
-    	
+
         for (CefDisplayHandler displayHandler : displayHandlers) {
             if (displayHandler.onConsoleMessage(browser, level, message, source, line)) {
-            	return true;
+                return true;
             }
         }
-        
+
         return false;
     }
 
     @Override
     public boolean onCursorChange(CefBrowser browser, int cursorType) {
-    	
+
         for (CefDisplayHandler displayHandler : displayHandlers) {
             if (displayHandler.onCursorChange(browser, cursorType)) {
-            	return true;
+                return true;
             }
         }
-        
+
         return false;
     }
 }

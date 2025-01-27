@@ -10,46 +10,46 @@ import me.eldodebug.soar.viaversion.protocolinfo.ProtocolInfo;
 
 public class ViaVersionMod extends Mod {
 
-	private static ViaVersionMod instance;
-	
-	private boolean loaded;
-	
-	public ViaVersionMod() {
-		super(TranslateText.VIA_VERSION, TranslateText.VIA_VERSION_DESCRIPTION, ModCategory.OTHER);
-		
-		instance = this;
-		loaded = false;
-	}
+    private static ViaVersionMod instance;
 
-	@Override
-	public void onEnable() {
-		super.onEnable();
-		
-		if(!loaded) {
-			loaded = true;
-			Multithreading.runAsync(() -> {
-				ViaSoar.create();
-				ViaSoar.getInstance().initAsyncSlider();
-			});
-		}
-	}
-	
-	@Override
-	public void onDisable() {
-		
-		super.onDisable();
-		
-		if(loaded) {
-			ViaSoar.getInstance().getAsyncVersionSlider().setVersion(ProtocolInfo.R1_8.getProtocolVersion().getVersion());
-			ViaLoadingBase.getInstance().reload(ProtocolInfo.R1_8.getProtocolVersion());
-		}
-	}
+    private boolean loaded;
 
-	public static ViaVersionMod getInstance() {
-		return instance;
-	}
+    public ViaVersionMod() {
+        super(TranslateText.VIA_VERSION, TranslateText.VIA_VERSION_DESCRIPTION, ModCategory.OTHER);
 
-	public boolean isLoaded() {
-		return loaded;
-	}
+        instance = this;
+        loaded = false;
+    }
+
+    @Override
+    public void onEnable() {
+        super.onEnable();
+
+        if (!loaded) {
+            loaded = true;
+            Multithreading.runAsync(() -> {
+                ViaSoar.create();
+                ViaSoar.getInstance().initAsyncSlider();
+            });
+        }
+    }
+
+    @Override
+    public void onDisable() {
+
+        super.onDisable();
+
+        if (loaded) {
+            ViaSoar.getInstance().getAsyncVersionSlider().setVersion(ProtocolInfo.R1_8.getProtocolVersion().getVersion());
+            ViaLoadingBase.getInstance().reload(ProtocolInfo.R1_8.getProtocolVersion());
+        }
+    }
+
+    public static ViaVersionMod getInstance() {
+        return instance;
+    }
+
+    public boolean isLoaded() {
+        return loaded;
+    }
 }

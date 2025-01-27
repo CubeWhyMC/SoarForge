@@ -1,7 +1,6 @@
 package me.eldodebug.soar.viaversion.model;
 
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
-
 import me.eldodebug.soar.viaversion.ViaLoadingBase;
 
 public class ProtocolRange {

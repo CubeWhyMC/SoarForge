@@ -1,14 +1,13 @@
 package me.eldodebug.soar.mobends.util;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
-
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 
+import java.util.Map;
+
 public class RenderingRegistry {
-	
+
     private static final RenderingRegistry INSTANCE = new RenderingRegistry();
 
     private Map<Class<? extends Entity>, Render<? extends Entity>> entityRenderersOld = Maps.newHashMap();

@@ -8,32 +8,32 @@ import me.eldodebug.soar.utils.PlayerUtils;
 
 public class GameModeDisplayMod extends SimpleHUDMod {
 
-	public GameModeDisplayMod() {
-		super(TranslateText.GAME_MODE_DISPLAY, TranslateText.GAME_MODE_DISPLAY_DESCRIPTION);
-	}
+    public GameModeDisplayMod() {
+        super(TranslateText.GAME_MODE_DISPLAY, TranslateText.GAME_MODE_DISPLAY_DESCRIPTION);
+    }
 
-	@EventTarget
-	public void onRender2D(EventRender2D event) {
-		this.draw();
-	}
-	
-	@Override
-	public String getText() {
-		
-		String prefix = "Mode: ";
-		
-		if(PlayerUtils.isSurvival()) {
-			return prefix + "Survival";
-		}
-		
-		if(PlayerUtils.isCreative()) {
-			return prefix + "Creative";
-		}
-		
-		if(PlayerUtils.isSpectator()) {
-			return prefix + "Spectator";
-		}
-		
-		return prefix + "Error";
-	}
+    @EventTarget
+    public void onRender2D(EventRender2D event) {
+        this.draw();
+    }
+
+    @Override
+    public String getText() {
+
+        String prefix = "Mode: ";
+
+        if (PlayerUtils.isSurvival()) {
+            return prefix + "Survival";
+        }
+
+        if (PlayerUtils.isCreative()) {
+            return prefix + "Creative";
+        }
+
+        if (PlayerUtils.isSpectator()) {
+            return prefix + "Spectator";
+        }
+
+        return prefix + "Error";
+    }
 }

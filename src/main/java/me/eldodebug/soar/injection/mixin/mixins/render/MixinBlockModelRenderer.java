@@ -1,12 +1,11 @@
 package me.eldodebug.soar.injection.mixin.mixins.render;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
 import me.eldodebug.soar.utils.EnumFacings;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.util.EnumFacing;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(BlockModelRenderer.class)
 public class MixinBlockModelRenderer {

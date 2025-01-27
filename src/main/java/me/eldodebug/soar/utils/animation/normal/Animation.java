@@ -5,7 +5,7 @@ import me.eldodebug.soar.utils.TimerUtils;
 public abstract class Animation {
 
     public TimerUtils timer = new TimerUtils();
-    
+
     protected int duration;
 
     protected double endPoint;
@@ -33,7 +33,7 @@ public abstract class Animation {
     }
 
     public void reset() {
-    	timer.reset();
+        timer.reset();
     }
 
     public boolean isDone() {
@@ -68,7 +68,7 @@ public abstract class Animation {
             } else return (1 - getEquation(timer.getElapsedTime())) * endPoint;
         }
     }
-    
+
     public void setValue(double value) {
         if (value >= 0 && value <= 1) {
             this.endPoint = value;
@@ -77,30 +77,30 @@ public abstract class Animation {
         }
     }
 
-    
+
     public float getValueFloat() {
-    	return (float) getValue();
+        return (float) getValue();
     }
-    
+
     public int getValueInt() {
-    	return (int) getValue();
+        return (int) getValue();
     }
 
     protected abstract double getEquation(double x);
 
-	public double getEndPoint() {
-		return endPoint;
-	}
+    public double getEndPoint() {
+        return endPoint;
+    }
 
-	public void setEndPoint(double endPoint) {
-		this.endPoint = endPoint;
-	}
+    public void setEndPoint(double endPoint) {
+        this.endPoint = endPoint;
+    }
 
-	public int getDuration() {
-		return duration;
-	}
+    public int getDuration() {
+        return duration;
+    }
 
-	public Direction getDirection() {
-		return direction;
-	}
+    public Direction getDirection() {
+        return direction;
+    }
 }

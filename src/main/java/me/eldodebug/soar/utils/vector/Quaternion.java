@@ -3,7 +3,7 @@ package me.eldodebug.soar.utils.vector;
 import me.eldodebug.soar.utils.MathUtils;
 
 public final class Quaternion {
-	
+
     public static final Quaternion ONE = new Quaternion(0.0F, 0.0F, 0.0F, 1.0F);
 
     private float i;
@@ -22,11 +22,11 @@ public final class Quaternion {
     }
 
     public Quaternion(Vector3f vector3f, float f, boolean bl) {
-    	
+
         if (bl) {
             f *= 0.017453292F;
         }
-        
+
         float g = sin(f / 2.0F);
         this.i = vector3f.x() * g;
         this.j = vector3f.y() * g;
@@ -221,9 +221,9 @@ public final class Quaternion {
     }
 
     public void normalize() {
-    	
+
         float f = i() * i() + j() * j() + k() * k() + r() * r();
-        
+
         if (f > 1.0E-6F) {
             float g = MathUtils.fastInvSqrt(f);
             this.i *= g;

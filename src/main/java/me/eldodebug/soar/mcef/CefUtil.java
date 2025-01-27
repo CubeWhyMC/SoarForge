@@ -1,16 +1,15 @@
 package me.eldodebug.soar.mcef;
 
-import java.io.File;
-
+import me.eldodebug.soar.Soar;
+import me.eldodebug.soar.management.file.FileManager;
 import org.cef.CefApp;
 import org.cef.CefClient;
 import org.cef.CefSettings;
 
-import me.eldodebug.soar.Soar;
-import me.eldodebug.soar.management.file.FileManager;
+import java.io.File;
 
 public final class CefUtil {
-	
+
     private CefUtil() {
     }
 
@@ -19,14 +18,14 @@ public final class CefUtil {
     private static CefClient cefClientInstance;
 
     static boolean init() {
-    	
-    	FileManager fileManager = Soar.getInstance().getFileManager();
-    	File cacheDir = new File(fileManager.getCacheDir(), "mcef");
-    	
-    	if(!cacheDir.exists()) {
-    		fileManager.createDir(cacheDir);
-    	}
-    	
+
+        FileManager fileManager = Soar.getInstance().getFileManager();
+        File cacheDir = new File(fileManager.getCacheDir(), "mcef");
+
+        if (!cacheDir.exists()) {
+            fileManager.createDir(cacheDir);
+        }
+
         String[] cefSwitches = new String[]{
                 "--autoplay-policy=no-user-gesture-required",
                 "--disable-web-security"
@@ -40,10 +39,10 @@ public final class CefUtil {
         cefSettings.windowless_rendering_enabled = true;
         cefSettings.background_color = cefSettings.new ColorType(0, 255, 255, 255);
         cefSettings.cache_path = cacheDir.getAbsolutePath();
-        
+
         cefAppInstance = CefApp.getInstance(cefSwitches, cefSettings);
         cefClientInstance = cefAppInstance.createClient();
-        
+
         return init = true;
     }
 

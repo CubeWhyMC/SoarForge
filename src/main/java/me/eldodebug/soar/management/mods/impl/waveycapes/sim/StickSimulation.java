@@ -1,11 +1,11 @@
 package me.eldodebug.soar.management.mods.impl.waveycapes.sim;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.eldodebug.soar.management.mods.impl.WaveyCapesMod;
 import me.eldodebug.soar.utils.MathUtils;
 import me.eldodebug.soar.utils.vector.Vector2;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StickSimulation {
 
@@ -16,11 +16,11 @@ public class StickSimulation {
     private float maxBend = 5;
 
     public void simulate() {
-    	
+
         gravity = WaveyCapesMod.getInstance().getGravitySetting().getValueFloat();
 
         float deltaTime = 50f / 1000f;
-        
+
         Vector2 down = new Vector2(0, gravity * deltaTime);
         Vector2 tmp = new Vector2(0, 0);
         for (Point p : points) {
@@ -73,7 +73,7 @@ public class StickSimulation {
                 }
             }
         }
-        
+
         for (int x = 0; x < sticks.size(); x++) {
             Stick stick = sticks.get(x);
             Vector2 stickDir = stick.pointA.position.clone().subtract(stick.pointB.position).normalize();
@@ -100,15 +100,15 @@ public class StickSimulation {
     }
 
     public static class Point {
-    	
+
         public Vector2 position = new Vector2(0, 0);
         public Vector2 prevPosition = new Vector2(0, 0);
         public boolean locked;
-        
+
         public float getLerpX(float delta) {
             return MathUtils.lerp(delta, prevPosition.x, position.x);
         }
-        
+
         public float getLerpY(float delta) {
             return MathUtils.lerp(delta, prevPosition.y, position.y);
         }

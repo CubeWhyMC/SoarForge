@@ -1,7 +1,6 @@
 package me.eldodebug.soar.viaversion.netty;
 
 import com.viaversion.viaversion.api.connection.UserConnection;
-
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

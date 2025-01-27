@@ -1,5 +1,11 @@
 package me.eldodebug.soar.utils.translate;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import me.eldodebug.soar.utils.TimerUtils;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -7,33 +13,26 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.StringJoiner;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import me.eldodebug.soar.utils.TimerUtils;
-
 public class Translator {
-	
-	private static String authCache;
-	private static TimerUtils timer;
-	
-	public static final String AUTO_DETECT = "";
-	public static final String ENGLISH = "en";
-	public static final String JAPANESE = "ja";
-	public static final String CHINESE_SIMPLIFIED = "zh-Hans";
-	public static final String CHINESE_TRADITIONAL = "zh-Hant";
-	public static final String POLISH = "pl";
-	
+
+    private static String authCache;
+    private static TimerUtils timer;
+
+    public static final String AUTO_DETECT = "";
+    public static final String ENGLISH = "en";
+    public static final String JAPANESE = "ja";
+    public static final String CHINESE_SIMPLIFIED = "zh-Hans";
+    public static final String CHINESE_TRADITIONAL = "zh-Hant";
+    public static final String POLISH = "pl";
+
     private static String auth() throws Exception {
-    	
-    	if(timer == null) {
-    		timer = new TimerUtils();
-    	}
-    	
-    	if(timer.delay(300 * 1000) || authCache == null) {
-    		
+
+        if (timer == null) {
+            timer = new TimerUtils();
+        }
+
+        if (timer.delay(300 * 1000) || authCache == null) {
+
             URL url = new URL("https://edge.microsoft.com/translate/auth");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
@@ -41,23 +40,23 @@ public class Translator {
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
             StringBuffer content = new StringBuffer();
-            
+
             while ((inputLine = in.readLine()) != null) {
                 content.append(inputLine);
             }
-            
-            in.close();
-            
-            authCache = content.toString();
-            
-            return authCache;
-    	}
 
-    	return authCache;
+            in.close();
+
+            authCache = content.toString();
+
+            return authCache;
+        }
+
+        return authCache;
     }
 
     public static String translate(String text, String from, String to) throws Exception {
-    	
+
         URL url = new URL("https://api.cognitive.microsofttranslator.com/translate?from=" + from + "&to=" + to + "&api-version=3.0&includeSentenceLength=true");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
@@ -66,7 +65,7 @@ public class Translator {
 
         StringJoiner sj = new StringJoiner(",", "[", "]");
         sj.add("{\"Text\":\"" + text + "\"}");
-        
+
         String jsonInputString = sj.toString();
 
         con.setDoOutput(true);

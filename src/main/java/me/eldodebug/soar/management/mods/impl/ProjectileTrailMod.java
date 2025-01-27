@@ -1,9 +1,5 @@
 package me.eldodebug.soar.management.mods.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-
 import me.eldodebug.soar.management.event.EventTarget;
 import me.eldodebug.soar.management.event.impl.EventUpdate;
 import me.eldodebug.soar.management.language.TranslateText;
@@ -18,31 +14,37 @@ import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.Vec3;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+
 public class ProjectileTrailMod extends Mod {
 
-	private ProjectileTrailType type;
-	
+    private ProjectileTrailType type;
+
     private ArrayList<Object> throwables = new ArrayList<>();
     private int ticks;
-    
-    private ComboSetting mode = new ComboSetting(TranslateText.TYPE, this, TranslateText.HEARTS, new ArrayList<Option>() {
-    	private static final long serialVersionUID = 1L; {
-    		for(ProjectileTrailType t : ProjectileTrailType.values()) {
-    			add(new Option(t.getNameTranslate()));
-    		}
-    	}
-    });
-    
-	public ProjectileTrailMod() {
-		super(TranslateText.PROJECTILE_TRAIL, TranslateText.PROJECTILE_TRAIL_DESCRIPTION, ModCategory.PLAYER);
-	}
 
-	@EventTarget
-	public void onUpdate(EventUpdate event) {
-		
-		type = ProjectileTrailType.getTypeByKey(mode.getOption().getNameKey());
-		ticks = ticks >= 20 ? 0 : ticks + 2;
-        
+    private ComboSetting mode = new ComboSetting(TranslateText.TYPE, this, TranslateText.HEARTS, new ArrayList<Option>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            for (ProjectileTrailType t : ProjectileTrailType.values()) {
+                add(new Option(t.getNameTranslate()));
+            }
+        }
+    });
+
+    public ProjectileTrailMod() {
+        super(TranslateText.PROJECTILE_TRAIL, TranslateText.PROJECTILE_TRAIL_DESCRIPTION, ModCategory.PLAYER);
+    }
+
+    @EventTarget
+    public void onUpdate(EventUpdate event) {
+
+        type = ProjectileTrailType.getTypeByKey(mode.getOption().getNameKey());
+        ticks = ticks >= 20 ? 0 : ticks + 2;
+
         updateThrowables();
         Iterator<Entity> iterator = mc.theWorld.getLoadedEntityList().iterator();
 
@@ -53,8 +55,8 @@ public class ProjectileTrailMod extends Mod {
                 spawnParticle(type, entity.getPositionVector());
             }
         }
-	}
-	
+    }
+
     public void spawnParticle(ProjectileTrailType trail, Vec3 vector) {
         if (trail != ProjectileTrailType.GREEN_STAR && trail != ProjectileTrailType.HEARTS || ticks % 4 == 0) {
             if (trail != ProjectileTrailType.MUSIC_NOTES || ticks % 2 == 0) {
@@ -78,7 +80,7 @@ public class ProjectileTrailMod extends Mod {
             }
         }
     }
-	
+
     public boolean isValidEntity(Entity entity) {
         if (entity.posX == entity.prevPosX && entity.posY == entity.prevPosY && entity.posZ == entity.prevPosZ) {
             return false;
@@ -99,7 +101,7 @@ public class ProjectileTrailMod extends Mod {
             return false;
         }
     }
-	
+
     public void updateThrowables() {
 
         Iterator<?> iterator = throwables.iterator();

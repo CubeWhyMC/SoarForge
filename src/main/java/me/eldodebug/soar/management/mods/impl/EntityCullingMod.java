@@ -1,18 +1,5 @@
 package me.eldodebug.soar.management.mods.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL33;
-import org.lwjgl.opengl.GLContext;
-
 import me.eldodebug.soar.injection.interfaces.IMixinRenderManager;
 import me.eldodebug.soar.management.event.EventTarget;
 import me.eldodebug.soar.management.event.impl.EventRenderTick;
@@ -37,42 +24,50 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.AxisAlignedBB;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL33;
+import org.lwjgl.opengl.GLContext;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class EntityCullingMod extends Mod {
 
     public static boolean shouldPerformCulling = false;
-    
+
     private final RenderManager renderManager = mc.getRenderManager();
     private final ConcurrentHashMap<UUID, OcclusionQuery> queries = new ConcurrentHashMap<>();
     private final boolean SUPPORT_NEW_GL = GLContext.getCapabilities().OpenGL33;
     private int destroyTimer;
-    
+
     private NumberSetting delaySetting = new NumberSetting(TranslateText.DELAY, this, 2, 1, 3, true);
     private NumberSetting distanceSetting = new NumberSetting(TranslateText.DISTANCE, this, 45, 10, 150, true);
-    
-	public EntityCullingMod() {
-		super(TranslateText.ENTITY_CULLING, TranslateText.ENTITY_CULLING_DESCRIPTIONN, ModCategory.OTHER);
-	}
+
+    public EntityCullingMod() {
+        super(TranslateText.ENTITY_CULLING, TranslateText.ENTITY_CULLING_DESCRIPTIONN, ModCategory.OTHER);
+    }
 
     @EventTarget
     public void onRendererLivingEntity(EventRendererLivingEntity event) {
-    	
-        if (!shouldPerformCulling) { 
-        	return;
+
+        if (!shouldPerformCulling) {
+            return;
         }
 
         EntityLivingBase entity = (EntityLivingBase) event.getEntity();
-        
+
         boolean armorstand = entity instanceof EntityArmorStand;
-        
+
         if (entity == mc.thePlayer || entity.worldObj != mc.thePlayer.worldObj || (armorstand && ((EntityArmorStand) entity).hasMarker()) || (entity.isInvisibleToPlayer(mc.thePlayer))) {
             return;
         }
 
         if (checkEntity(entity)) {
-        	
-        	event.setCancelled(true);
-        	
+
+            event.setCancelled(true);
+
             if (!canRenderName(entity)) {
                 return;
             }
@@ -81,20 +76,20 @@ public class EntityCullingMod extends Mod {
             double y = event.getY();
             double z = event.getZ();
             RendererLivingEntity<EntityLivingBase> renderer = (RendererLivingEntity<EntityLivingBase>) event.getRenderer();
-            
+
             renderer.renderName(entity, x, y, z);
         }
 
         if ((entity instanceof EntityArmorStand) || (entity.isInvisible() && entity instanceof EntityPlayer)) {
-        	event.setCancelled(true);
+            event.setCancelled(true);
         }
 
         if (shouldPerformCulling) {
-        	
+
             final float entityDistance = entity.getDistanceToEntity(mc.thePlayer);
 
             if (entityDistance > distanceSetting.getValueFloat()) {
-            	event.setCancelled(true);
+                event.setCancelled(true);
             }
         }
     }
@@ -103,10 +98,10 @@ public class EntityCullingMod extends Mod {
     public void onRenderTick(EventRenderTick event) {
         mc.addScheduledTask(this::check);
     }
-    
+
     @EventTarget
     public void onTick(EventTick event) {
-    	
+
         if (this.destroyTimer++ < 120) {
             return;
         }
@@ -164,11 +159,11 @@ public class EntityCullingMod extends Mod {
 
         return Minecraft.isGuiEnabled() && entity != mc.getRenderManager().livingPlayer && ((entity instanceof EntityArmorStand) || !entity.isInvisibleToPlayer(player)) && entity.riddenByEntity == null;
     }
-    
+
     public boolean renderItem(Entity stack) {
         return shouldPerformCulling && stack.worldObj == mc.thePlayer.worldObj && checkEntity(stack);
     }
-    
+
     private void check() {
         long delay = 0;
 
@@ -209,7 +204,7 @@ public class EntityCullingMod extends Mod {
 
     private boolean checkEntity(Entity entity) {
         OcclusionQuery query = queries.computeIfAbsent(entity.getUniqueID(), OcclusionQuery::new);
-        
+
         if (query.refresh) {
             query.nextQuery = getQuery();
             query.refresh = false;
@@ -217,7 +212,7 @@ public class EntityCullingMod extends Mod {
             GL15.glBeginQuery(mode, query.nextQuery);
             drawSelectionBoundingBox(entity.getEntityBoundingBox()
                     .expand(.2, .2, .2)
-                    .offset(-((IMixinRenderManager)renderManager).getRenderPosX(), -((IMixinRenderManager)renderManager).getRenderPosY(), -((IMixinRenderManager)renderManager).getRenderPosZ())
+                    .offset(-((IMixinRenderManager) renderManager).getRenderPosX(), -((IMixinRenderManager) renderManager).getRenderPosY(), -((IMixinRenderManager) renderManager).getRenderPosZ())
             );
             GL15.glEndQuery(mode);
         }
@@ -265,18 +260,18 @@ public class EntityCullingMod extends Mod {
             return 0;
         }
     }
-    
-	private class OcclusionQuery {
-		
-		public final UUID uuid;
-	    public int nextQuery;
-	    public boolean refresh = true;
-	    public boolean occluded;
-	    public long executionTime = 0;
-	    
-	    private OcclusionQuery(UUID uuid) {
-	        this.uuid = uuid;
-	    }
-	}
+
+    private class OcclusionQuery {
+
+        public final UUID uuid;
+        public int nextQuery;
+        public boolean refresh = true;
+        public boolean occluded;
+        public long executionTime = 0;
+
+        private OcclusionQuery(UUID uuid) {
+            this.uuid = uuid;
+        }
+    }
 
 }

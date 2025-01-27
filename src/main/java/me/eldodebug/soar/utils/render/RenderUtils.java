@@ -1,9 +1,5 @@
 package me.eldodebug.soar.utils.render;
 
-import java.awt.Color;
-
-import org.lwjgl.opengl.GL11;
-
 import me.eldodebug.soar.utils.ColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,11 +8,14 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 public class RenderUtils {
-	
-	private static Minecraft mc = Minecraft.getMinecraft();
-	
+
+    private static Minecraft mc = Minecraft.getMinecraft();
+
     public static void connectPoints(float xOne, float yOne, float xTwo, float yTwo) {
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
@@ -36,7 +35,7 @@ public class RenderUtils {
     }
 
     public static void drawCircle(float x, float y, float radius, int color) {
-    	
+
         float alpha = (color >> 24 & 0xFF) / 255.0F;
         float red = (color >> 16 & 0xFF) / 255.0F;
         float green = (color >> 8 & 0xFF) / 255.0F;
@@ -50,18 +49,18 @@ public class RenderUtils {
         GL11.glPushMatrix();
         GL11.glLineWidth(1F);
         GL11.glBegin(GL11.GL_POLYGON);
-        
-        for(int i = 0; i <= 360; i++) {
-        	GL11.glVertex2d(x + Math.sin(i * Math.PI / 180.0D) * radius, y + Math.cos(i * Math.PI / 180.0D) * radius);
+
+        for (int i = 0; i <= 360; i++) {
+            GL11.glVertex2d(x + Math.sin(i * Math.PI / 180.0D) * radius, y + Math.cos(i * Math.PI / 180.0D) * radius);
         }
-        
+
         GL11.glEnd();
         GL11.glPopMatrix();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
         GL11.glColor4f(1F, 1F, 1F, 1F);
     }
-    
+
     public static void drawItemStack(ItemStack stack, int x, int y) {
         GlStateManager.pushMatrix();
         RenderHelper.enableGUIStandardItemLighting();
@@ -90,22 +89,22 @@ public class RenderUtils {
         RenderHelper.disableStandardItemLighting();
         GlStateManager.popMatrix();
     }
-    
+
     public static void drawScaledCustomSizeModalRect(double x, double y, float u, float v, int uWidth, int vHeight, double width, double height, float tileWidth, float tileHeight) {
         float f = 1.0F / tileWidth;
         float f1 = 1.0F / tileHeight;
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos((double)x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)vHeight) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y + height), 0.0D).tex((double)((u + (float)uWidth) * f), (double)((v + (float)vHeight) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)y, 0.0D).tex((double)((u + (float)uWidth) * f), (double)(v * f1)).endVertex();
-        worldrenderer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex();
+        worldrenderer.pos((double) x, (double) (y + height), 0.0D).tex((double) (u * f), (double) ((v + (float) vHeight) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) (y + height), 0.0D).tex((double) ((u + (float) uWidth) * f), (double) ((v + (float) vHeight) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) y, 0.0D).tex((double) ((u + (float) uWidth) * f), (double) (v * f1)).endVertex();
+        worldrenderer.pos((double) x, (double) y, 0.0D).tex((double) (u * f), (double) (v * f1)).endVertex();
         tessellator.draw();
     }
-    
-	public static void drawRect(float x, float y, float width, float height, Color color) {
-		
+
+    public static void drawRect(float x, float y, float width, float height, Color color) {
+
         GL11.glEnable(3042);
         GL11.glDisable(3553);
         GL11.glBlendFunc(770, 771);
@@ -127,10 +126,10 @@ public class RenderUtils {
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
         ColorUtils.resetColor();
-	}
-	
+    }
+
     public static void drawOutline(float x, float y, float width, float height, float lineWidth, Color color) {
-		
+
         GL11.glEnable(3042);
         GL11.glDisable(3553);
         GL11.glBlendFunc(770, 771);
@@ -158,20 +157,20 @@ public class RenderUtils {
         GlStateManager.disableBlend();
         ColorUtils.resetColor();
     }
-	
+
     public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos((double)(x + 0), (double)(y + height), (double)0).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + height) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y + height), (double)0).tex((double)((float)(textureX + width) * f), (double)((float)(textureY + height) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y + 0), (double)0).tex((double)((float)(textureX + width) * f), (double)((float)(textureY + 0) * f1)).endVertex();
-        worldrenderer.pos((double)(x + 0), (double)(y + 0), (double)0).tex((double)((float)(textureX + 0) * f), (double)((float)(textureY + 0) * f1)).endVertex();
+        worldrenderer.pos((double) (x + 0), (double) (y + height), (double) 0).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + height) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) (y + height), (double) 0).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
+        worldrenderer.pos((double) (x + 0), (double) (y + 0), (double) 0).tex((double) ((float) (textureX + 0) * f), (double) ((float) (textureY + 0) * f1)).endVertex();
         tessellator.draw();
     }
-    
+
     public static void drawQuads(float x, float y, float width, float height) {
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glTexCoord2f(0, 0);
@@ -191,10 +190,10 @@ public class RenderUtils {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos((double)x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)(y + height), 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex();
-        worldrenderer.pos((double)(x + width), (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex();
-        worldrenderer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex();
+        worldrenderer.pos((double) x, (double) (y + height), 0.0D).tex((double) (u * f), (double) ((v + (float) height) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) (y + height), 0.0D).tex((double) ((u + (float) width) * f), (double) ((v + (float) height) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) y, 0.0D).tex((double) ((u + (float) width) * f), (double) (v * f1)).endVertex();
+        worldrenderer.pos((double) x, (double) y, 0.0D).tex((double) (u * f), (double) (v * f1)).endVertex();
         tessellator.draw();
     }
 }

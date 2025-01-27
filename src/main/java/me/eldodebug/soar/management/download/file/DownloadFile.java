@@ -4,31 +4,31 @@ import java.io.File;
 
 public class DownloadFile {
 
-	private String url;
-	private String fileName;
-	private File outputDir;
-	private long size;
-	
-	public DownloadFile(String url, String fileName, File outputDir, long size) {
-		this.url = url;
-		this.fileName = fileName;
-		this.outputDir = outputDir;
-		this.size = size;
-	}
+    private String url;
+    private String fileName;
+    private File outputDir;
+    private long size;
 
-	public String getUrl() {
-		return url;
-	}
+    public DownloadFile(String url, String fileName, File outputDir, long size) {
+        this.url = url;
+        this.fileName = fileName;
+        this.outputDir = outputDir;
+        this.size = size;
+    }
 
-	public String getFileName() {
-		return fileName;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public File getOutputDir() {
-		return outputDir;
-	}
+    public String getFileName() {
+        return fileName;
+    }
 
-	public long getSize() {
-		return size;
-	}
+    public File getOutputDir() {
+        return outputDir;
+    }
+
+    public long getSize() {
+        return size;
+    }
 }

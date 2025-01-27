@@ -34,3 +34,5 @@ replay_pid*
 *.metadata/
 *.vs
 */.idea
+
+.gradle/

@@ -22,7 +22,7 @@ public class SmoothCapeRenderer {
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
         PoseStack poseStack = new PoseStack();
         poseStack.pushPose();
-        
+
         Matrix4f oldPositionMatrix = null;
         for (int part = 0; part < CustomCapeRenderLayer.partCount; part++) {
             modifyPoseStack(layer, poseStack, abstractClientPlayer, delta, part);
@@ -88,43 +88,43 @@ public class SmoothCapeRenderer {
         }
         Tessellator.getInstance().draw();
     }
-    
+
     public void modifyPoseStack(CustomCapeRenderLayer layer, PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
-    	
-    	WaveyCapesMod mod = WaveyCapesMod.getInstance();
-    	
-        if(mod.getMovementSetting().getOption().getTranslate().equals(TranslateText.BASIC)) {
+
+        WaveyCapesMod mod = WaveyCapesMod.getInstance();
+
+        if (mod.getMovementSetting().getOption().getTranslate().equals(TranslateText.BASIC)) {
             modifyPoseStackSimulation(layer, poseStack, abstractClientPlayer, h, part);
             return;
         }
-        
+
         modifyPoseStackVanilla(layer, poseStack, abstractClientPlayer, h, part);
     }
-    
+
     private void modifyPoseStackSimulation(CustomCapeRenderLayer layer, PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float delta, int part) {
-    	
-        StickSimulation simulation = ((IMixinEntityPlayer)abstractClientPlayer).getSimulation();
+
+        StickSimulation simulation = ((IMixinEntityPlayer) abstractClientPlayer).getSimulation();
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
-        
+
         float z = simulation.points.get(part).getLerpX(delta) - simulation.points.get(0).getLerpX(delta);
-        
-        if(z > 0) {
+
+        if (z > 0) {
             z = 0;
         }
-        
+
         float y = simulation.points.get(0).getLerpY(delta) - part - simulation.points.get(part).getLerpY(delta);
-        
+
         float sidewaysRotationOffset = 0;
         float partRotation = (float) -Math.atan2(y, z);
         partRotation = Math.max(partRotation, 0);
-        if(partRotation != 0)
-            partRotation = (float) (Math.PI-partRotation);
+        if (partRotation != 0)
+            partRotation = (float) (Math.PI - partRotation);
         partRotation *= 57.2958;
         partRotation *= 2;
-        
+
         float height = 0;
-        
+
         if (abstractClientPlayer.isSneaking()) {
             height += 25.0F;
             poseStack.translate(0, 0.15F, 0);
@@ -135,14 +135,14 @@ public class SmoothCapeRenderer {
         poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + height + naturalWindSwing));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
-        poseStack.translate(0, y/CustomCapeRenderLayer.partCount, z/CustomCapeRenderLayer.partCount);
-        poseStack.translate(0, (0.48/16) , - (0.48/16));
-        poseStack.translate(0, part * 1f/CustomCapeRenderLayer.partCount, part * (0)/CustomCapeRenderLayer.partCount);
+        poseStack.translate(0, y / CustomCapeRenderLayer.partCount, z / CustomCapeRenderLayer.partCount);
+        poseStack.translate(0, (0.48 / 16), -(0.48 / 16));
+        poseStack.translate(0, part * 1f / CustomCapeRenderLayer.partCount, part * (0) / CustomCapeRenderLayer.partCount);
         poseStack.mulPose(Vector3f.XP.rotationDegrees(-partRotation));
-        poseStack.translate(0, -part * 1f/CustomCapeRenderLayer.partCount, -part * (0)/CustomCapeRenderLayer.partCount);
-        poseStack.translate(0, -(0.48/16), (0.48/16));
+        poseStack.translate(0, -part * 1f / CustomCapeRenderLayer.partCount, -part * (0) / CustomCapeRenderLayer.partCount);
+        poseStack.translate(0, -(0.48 / 16), (0.48 / 16));
     }
-    
+
     private void modifyPoseStackVanilla(CustomCapeRenderLayer layer, PoseStack poseStack, AbstractClientPlayer abstractClientPlayer, float h, int part) {
         poseStack.pushPose();
         poseStack.translate(0.0D, 0.0D, 0.125D);
@@ -157,8 +157,8 @@ public class SmoothCapeRenderer {
         double p = -Math.cos(n * 0.017453292F);
         float height = (float) e * 10.0F;
         height = MathHelper.clamp_float(height, -6.0F, 32.0F);
-        float swing = (float) (d * o + m * p) * easeOutSine(1.0F/CustomCapeRenderLayer.partCount*part)*100;
-        swing = MathHelper.clamp_float(swing, 0.0F, 150.0F * easeOutSine(1F/CustomCapeRenderLayer.partCount*part));
+        float swing = (float) (d * o + m * p) * easeOutSine(1.0F / CustomCapeRenderLayer.partCount * part) * 100;
+        swing = MathHelper.clamp_float(swing, 0.0F, 150.0F * easeOutSine(1F / CustomCapeRenderLayer.partCount * part));
         float sidewaysRotationOffset = (float) (d * p - m * o) * 100.0F;
         sidewaysRotationOffset = MathHelper.clamp_float(sidewaysRotationOffset, -20.0F, 20.0F);
         float t = MathUtils.lerp(h, abstractClientPlayer.prevCameraYaw, abstractClientPlayer.cameraYaw);
@@ -169,12 +169,12 @@ public class SmoothCapeRenderer {
         }
 
         float naturalWindSwing = layer.getNatrualWindSwing(part);
-        
+
         poseStack.mulPose(Vector3f.XP.rotationDegrees(6.0F + swing / 2.0F + height + naturalWindSwing));
         poseStack.mulPose(Vector3f.ZP.rotationDegrees(sidewaysRotationOffset / 2.0F));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(180.0F - sidewaysRotationOffset / 2.0F));
     }
-    
+
     private static void addBackVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
         float i;
         Matrix4f k;
@@ -212,7 +212,7 @@ public class SmoothCapeRenderer {
     }
 
     private static void addFrontVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
-    	
+
         float i;
         Matrix4f k;
         if (x1 < x2) {
@@ -249,9 +249,9 @@ public class SmoothCapeRenderer {
     }
 
     private static void addLeftVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
-    	
+
         float i;
-        
+
         if (x1 < x2) {
             i = x1;
             x1 = x2;
@@ -278,11 +278,11 @@ public class SmoothCapeRenderer {
         vertex(worldrenderer, matrix, x2, y1, z1).tex(maxU, maxV).normal(1, 0, 0).endVertex();
         vertex(worldrenderer, matrix, x2, y1, z2).tex(minU, maxV).normal(1, 0, 0).endVertex();
         vertex(worldrenderer, oldMatrix, x2, y2, z2).tex(minU, minV).normal(1, 0, 0).endVertex();
-        vertex(worldrenderer, oldMatrix, x2, y2, z1).tex(maxU, minV).normal(1, 0, 0).endVertex();        
+        vertex(worldrenderer, oldMatrix, x2, y2, z1).tex(maxU, minV).normal(1, 0, 0).endVertex();
     }
 
     private static void addRightVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
-    	
+
         float i;
         if (x1 < x2) {
             i = x1;
@@ -314,7 +314,7 @@ public class SmoothCapeRenderer {
     }
 
     private static void addBottomVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
-    	
+
         float i;
         if (x1 < x2) {
             i = x1;
@@ -351,9 +351,9 @@ public class SmoothCapeRenderer {
         worldrenderer.pos(vector4f.x(), vector4f.y(), vector4f.z());
         return worldrenderer;
     }
-    
+
     private static void addTopVertex(WorldRenderer worldrenderer, Matrix4f matrix, Matrix4f oldMatrix, float x1, float y1, float z1, float x2, float y2, float z2, int part) {
-    	
+
         float i;
         if (x1 < x2) {
             i = x1;
@@ -383,7 +383,7 @@ public class SmoothCapeRenderer {
         vertex(worldrenderer, matrix, x2, y1, z2).tex(minU, minV).normal(0, 1, 0).endVertex();
         vertex(worldrenderer, matrix, x1, y1, z2).tex(maxU, minV).normal(0, 1, 0).endVertex();
     }
-    
+
     private static float easeOutSine(float x) {
         return (float) Math.sin((x * Math.PI) / 2f);
     }

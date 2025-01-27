@@ -35,4 +35,4 @@ replay_pid*
 *.vs
 */.idea
 
-.gradle/
+.gradle/*

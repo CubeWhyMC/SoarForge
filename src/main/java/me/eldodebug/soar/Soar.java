@@ -35,8 +35,15 @@ import java.util.Arrays;
 @Slf4j
 public class Soar {
 
-    @Getter
-    private static final Soar instance = new Soar();
+    private static Soar instance = null;
+
+    public static Soar getInstance() {
+        if (instance == null) {
+            instance = new Soar();
+        }
+        return instance;
+    }
+
     private final Minecraft mc = Minecraft.getMinecraft();
     @Getter
     private SoarAPI api;
@@ -96,7 +103,7 @@ public class Soar {
         }
     }
 
-    public void start() {
+    public void postStart() {
 
         OptifineUtils.disableFastRender();
         this.removeOptifineZoom();

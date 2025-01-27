@@ -18,7 +18,7 @@ import java.awt.*;
 
 public class GuiSplashScreen {
 
-    private Minecraft mc = Minecraft.getMinecraft();
+    private final Minecraft mc = Minecraft.getMinecraft();
 
     private Framebuffer framebuffer;
 
@@ -30,7 +30,6 @@ public class GuiSplashScreen {
 
         ScaledResolution sr = new ScaledResolution(mc);
         int scaleFactor = sr.getScaleFactor();
-        NanoVGManager nvg = new NanoVGManager();
 
         if (fadeAnimation == null) {
             fadeAnimation = new DecelerateAnimation(1000, 1);
@@ -61,6 +60,7 @@ public class GuiSplashScreen {
             GlStateManager.enableAlpha();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
+            NanoVGManager nvg = Soar.getInstance().getNanoVGManager();
             nvg.setupAndDraw(() -> {
                 nvg.drawRect(0, 0, sr.getScaledWidth(), sr.getScaledHeight(), Color.BLACK);
                 nvg.drawCenteredText(Icon.SOAR, sr.getScaledWidth() / 2, (sr.getScaledHeight() / 2) - (nvg.getTextHeight(Icon.SOAR, 130, Fonts.ICON) / 2) - 1, new Color(255, 255, 255, (int) (fadeAnimation.getValue() * 255)), 130, Fonts.ICON);
@@ -73,7 +73,5 @@ public class GuiSplashScreen {
 
             mc.updateDisplay();
         }
-
-        Soar.getInstance().setNanoVGManager(nvg);
     }
 }

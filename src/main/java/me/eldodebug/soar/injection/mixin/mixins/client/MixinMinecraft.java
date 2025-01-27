@@ -1,11 +1,12 @@
 package me.eldodebug.soar.injection.mixin.mixins.client;
 
+import lombok.extern.slf4j.Slf4j;
 import me.eldodebug.soar.Soar;
-import me.eldodebug.soar.gui.GuiSplashScreen;
 import me.eldodebug.soar.injection.interfaces.IMixinEntityLivingBase;
 import me.eldodebug.soar.injection.interfaces.IMixinMinecraft;
 import me.eldodebug.soar.management.event.impl.*;
 import me.eldodebug.soar.management.mods.impl.*;
+import me.eldodebug.soar.management.nanovg.NanoVGManager;
 import me.eldodebug.soar.viaversion.fixes.AttackOrder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -42,6 +43,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
+@Slf4j
 public abstract class MixinMinecraft implements IMixinMinecraft {
 
     @Shadow
@@ -112,8 +114,13 @@ public abstract class MixinMinecraft implements IMixinMinecraft {
     private boolean enableGLErrorChecking;
 
     @Inject(method = "startGame", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;ingameGUI:Lnet/minecraft/client/gui/GuiIngame;", shift = At.Shift.AFTER))
-    public void preStartGame(CallbackInfo ci) {
-        Soar.getInstance().start();
+    public void postStartGame(CallbackInfo ci) {
+        log.info("Init NanoVG");
+        NanoVGManager nanoVGManager = new NanoVGManager();
+        nanoVGManager.setupAndDraw(() -> {});
+        Soar.getInstance().setNanoVGManager(nanoVGManager);
+        log.info("NanoVG Finished");
+        Soar.getInstance().postStart();
     }
 
     @Redirect(method = "runTick", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;next()Z"))
@@ -294,7 +301,7 @@ public abstract class MixinMinecraft implements IMixinMinecraft {
 
     @Inject(method = "drawSplashScreen", at = @At("HEAD"), cancellable = true)
     public void overrideSplash(TextureManager textureManagerInstance, CallbackInfo ci) {
-        new GuiSplashScreen().draw();
+//        new GuiSplashScreen().draw();
         ci.cancel();
     }
 
